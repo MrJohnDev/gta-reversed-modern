@@ -156,9 +156,56 @@ void CCarAI::MakeWayForCarWithSiren(CVehicle* vehicle) {
     plugin::Call<0x41D660, CVehicle*>(vehicle);
 }
 
+// The closer the car is to the player, the slower its speed.
+// Used for police cars when the player has wanted stars.
+//
 // 0x41D3D0
 void CCarAI::MellowOutChaseSpeed(CVehicle* vehicle) {
-    plugin::Call<0x41D3D0, CVehicle*>(vehicle);
+    if (FindPlayerWanted()->GetWantedLevel() == 1) {
+        const float distanceToPlayer = (vehicle->GetPosition() - FindPlayerCoors()).Magnitude();
+        if (FindPlayerVehicle()) {
+            if (distanceToPlayer < 10.0) {
+                vehicle->m_autoPilot.m_nCruiseSpeed = 15;
+            } else if (distanceToPlayer < 20.0) {
+                vehicle->m_autoPilot.m_nCruiseSpeed = 22;
+            } else {
+                vehicle->m_autoPilot.m_nCruiseSpeed = 25;
+            }
+        } else {
+            if (distanceToPlayer < 20.0) {
+                vehicle->m_autoPilot.m_nCruiseSpeed = 5;
+            } else if (distanceToPlayer < 40.0) {
+                vehicle->m_autoPilot.m_nCruiseSpeed = 13;
+            } else {
+                vehicle->m_autoPilot.m_nCruiseSpeed = 25;
+            }
+        }
+    } else {
+        if (FindPlayerWanted()->GetWantedLevel() == 2) {
+            const float distanceToPlayer = (vehicle->GetPosition() - FindPlayerCoors()).Magnitude();
+            if (FindPlayerVehicle(-1, 0)) {
+                if (distanceToPlayer < 10.0) {
+                    vehicle->m_autoPilot.m_nCruiseSpeed = 27;
+                } else if (distanceToPlayer < 20.0) {
+                    vehicle->m_autoPilot.m_nCruiseSpeed = 30;
+                } else {
+                    vehicle->m_autoPilot.m_nCruiseSpeed = 34;
+                }
+            } else {
+                if (distanceToPlayer < 20.0) {
+                    vehicle->m_autoPilot.m_nCruiseSpeed = 5;
+                } else if (distanceToPlayer < 40.0) {
+                    vehicle->m_autoPilot.m_nCruiseSpeed = 18;
+                } else {
+                    vehicle->m_autoPilot.m_nCruiseSpeed = 34;
+                }
+            }
+        }
+    }
+    if (!FindPlayerVehicle() && FindPlayerPed()->GetMoveSpeed().Magnitude() < 0.07) {
+        if ((FindPlayerCoors() - vehicle->GetPosition()).Magnitude() < 30.0f)
+            vehicle->m_autoPilot.m_nCruiseSpeed = std::min(10, (int)vehicle->m_autoPilot.m_nCruiseSpeed);
+    }
 }
 
 // 0x41CB70
