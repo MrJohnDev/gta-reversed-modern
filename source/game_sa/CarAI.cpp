@@ -180,25 +180,23 @@ void CCarAI::MellowOutChaseSpeed(CVehicle* vehicle) {
                 vehicle->m_autoPilot.m_nCruiseSpeed = 25;
             }
         }
-    } else {
-        if (FindPlayerWanted()->GetWantedLevel() == 2) {
-            const float distanceToPlayer = (vehicle->GetPosition() - FindPlayerCoors()).Magnitude();
-            if (FindPlayerVehicle(-1, 0)) {
-                if (distanceToPlayer < 10.0) {
-                    vehicle->m_autoPilot.m_nCruiseSpeed = 27;
-                } else if (distanceToPlayer < 20.0) {
-                    vehicle->m_autoPilot.m_nCruiseSpeed = 30;
-                } else {
-                    vehicle->m_autoPilot.m_nCruiseSpeed = 34;
-                }
+    } else if (FindPlayerWanted()->GetWantedLevel() == 2) {
+        const float distanceToPlayer = (vehicle->GetPosition() - FindPlayerCoors()).Magnitude();
+        if (FindPlayerVehicle(-1, 0)) {
+            if (distanceToPlayer < 10.0) {
+                vehicle->m_autoPilot.m_nCruiseSpeed = 27;
+            } else if (distanceToPlayer < 20.0) {
+                vehicle->m_autoPilot.m_nCruiseSpeed = 30;
             } else {
-                if (distanceToPlayer < 20.0) {
-                    vehicle->m_autoPilot.m_nCruiseSpeed = 5;
-                } else if (distanceToPlayer < 40.0) {
-                    vehicle->m_autoPilot.m_nCruiseSpeed = 18;
-                } else {
-                    vehicle->m_autoPilot.m_nCruiseSpeed = 34;
-                }
+                vehicle->m_autoPilot.m_nCruiseSpeed = 34;
+            }
+        } else {
+            if (distanceToPlayer < 20.0) {
+                vehicle->m_autoPilot.m_nCruiseSpeed = 5;
+            } else if (distanceToPlayer < 40.0) {
+                vehicle->m_autoPilot.m_nCruiseSpeed = 18;
+            } else {
+                vehicle->m_autoPilot.m_nCruiseSpeed = 34;
             }
         }
     }
