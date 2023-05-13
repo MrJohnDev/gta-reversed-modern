@@ -62,7 +62,7 @@ void CCarAI::BackToCruisingIfNoWantedLevel(CVehicle* vehicle) {
 
 // 0x41C050
 void CCarAI::CarHasReasonToStop(CVehicle* vehicle) {
-    plugin::Call<0x41C050, CVehicle*>(vehicle);
+    vehicle->m_autoPilot.m_nTimeToStartMission = CTimer::m_snTimeInMilliseconds;
 }
 
 // 0x41CD00
